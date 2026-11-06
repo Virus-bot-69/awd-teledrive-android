@@ -17,14 +17,20 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Install Android SDK packages
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          SDKMAN="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKMAN" --licenses > /dev/null 2>&1 || true
+          "$SDKMAN" --install "platform-tools" "platforms;android-37.0" "build-tools;37.0.0" || \
+          "$SDKMAN" --install "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+          ls "$ANDROID_HOME/platforms" || true
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
       - name: Build debug APK
-        run: ./gradlew :app:assembleDebug --stacktrace
+        run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK
         if: always()
