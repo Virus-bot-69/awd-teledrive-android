@@ -203,6 +203,7 @@ fun MultiDriveScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProviderCard(status: ProviderStatus, onClick: () -> Unit) {
     val (accent, icon) = providerVisual(status.provider)

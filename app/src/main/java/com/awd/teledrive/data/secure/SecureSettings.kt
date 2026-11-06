@@ -61,14 +61,6 @@ class SecureSettings @Inject constructor(
         return sharedPreferences.getInt(key, defaultValue)
     }
 
-    fun saveLong(key: String, value: Long) {
-        sharedPreferences.edit().putLong(key, value).apply()
-    }
-
-    fun getLong(key: String, defaultValue: Long = 0L): Long {
-        return sharedPreferences.getLong(key, defaultValue)
-    }
-
     fun saveStringList(key: String, list: List<String>) {
         val data = list.joinToString(";")
         saveString(key, data)

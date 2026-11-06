@@ -238,6 +238,7 @@ fun AccountsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AccountRow(
     title: String,
