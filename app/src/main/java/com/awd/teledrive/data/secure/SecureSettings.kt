@@ -91,6 +91,14 @@ class SecureSettings @Inject constructor(
         saveBoolean("security_enabled", enabled)
     }
 
+    fun saveLong(key: String, value: Long) {
+        sharedPreferences.edit().putLong(key, value).apply()
+    }
+
+    fun getLong(key: String, defaultValue: Long = 0L): Long {
+        return sharedPreferences.getLong(key, defaultValue)
+    }
+
     fun saveDownloadUri(uri: String) {
         saveString("download_uri", uri)
     }

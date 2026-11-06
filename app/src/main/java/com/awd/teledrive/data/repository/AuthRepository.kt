@@ -85,7 +85,7 @@ class AuthRepository @Inject constructor(
     private fun sendTdlibParameters(apiId: Int, apiHash: String) {
         val parameters = TdApi.SetTdlibParameters(
             false,
-            File(context.filesDir, "tdlib").absolutePath,
+            File(context.filesDir, telegramClient.databaseDirectoryName).absolutePath,
             "",
             null,
             true,

@@ -58,6 +58,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- Google OAuth redirect (see core/Config.kt -> GOOGLE_CLIENT_ID) -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="${appAuthRedirectScheme}"
+                    android:path="/oauth2redirect" />
+            </intent-filter>
         </activity>
 
         <provider

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PermMedia
 import androidx.compose.material.icons.filled.Settings
@@ -49,6 +50,10 @@ import com.awd.teledrive.ui.screens.auth.LoginScreen
 import com.awd.teledrive.ui.screens.home.HomeScreen
 import com.awd.teledrive.ui.screens.logs.LogsScreen
 import com.awd.teledrive.ui.screens.media.MediaScreen
+import com.awd.teledrive.ui.screens.accounts.AccountsScreen
+import com.awd.teledrive.ui.screens.admin.AdminScreen
+import com.awd.teledrive.ui.screens.multidrive.GoogleDriveScreen
+import com.awd.teledrive.ui.screens.multidrive.MultiDriveScreen
 import com.awd.teledrive.ui.screens.preview.PdfViewerScreen
 import com.awd.teledrive.ui.screens.preview.PreviewScreen
 import com.awd.teledrive.ui.screens.preview.TextViewerScreen
@@ -69,6 +74,10 @@ sealed class Screen(val route: String, val icon: ImageVector? = null, val labelR
     object Security : Screen("security")
     object Login : Screen("login")
     object Home : Screen("home", Icons.Default.Home, R.string.home)
+    object MultiDrive : Screen("multi_drive", Icons.Default.Cloud, R.string.multi_drive)
+    object Accounts : Screen("accounts")
+    object Admin : Screen("admin")
+    object GoogleDrive : Screen("google_drive")
     object Starred : Screen("starred", Icons.Default.Star, R.string.starred)
     object Media : Screen("media", Icons.Default.PermMedia, R.string.media)
     object Transfers : Screen("transfers", Icons.Default.SwapVert, R.string.transfers)
@@ -136,7 +145,7 @@ fun NavGraph(navController: NavHostController) {
         }
     }
 
-    val bottomNavScreens = listOf(Screen.Home, Screen.Media, Screen.Starred, Screen.Settings)
+    val bottomNavScreens = listOf(Screen.Home, Screen.MultiDrive, Screen.Media, Screen.Starred, Screen.Settings)
     val shouldShowBottomBar = currentRoute in bottomNavScreens.map { it.route } && currentRoute != Screen.SecureStorage.route
 
     Scaffold(
@@ -265,6 +274,22 @@ fun NavGraph(navController: NavHostController) {
                         navController.navigate(Screen.Preview.createRoute(file.parentChatId, file.id, virtualParentId = file.virtualParentId ?: "0"))
                     }
                 )
+            }
+            composable(Screen.MultiDrive.route) {
+                MultiDriveScreen(
+                    onOpenAccounts = { navController.navigate(Screen.Accounts.route) },
+                    onOpenGoogleDrive = { navController.navigate(Screen.GoogleDrive.route) },
+                    onOpenAdmin = { navController.navigate(Screen.Admin.route) }
+                )
+            }
+            composable(Screen.Accounts.route) {
+                AccountsScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Screen.Admin.route) {
+                AdminScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Screen.GoogleDrive.route) {
+                GoogleDriveScreen(onBack = { navController.popBackStack() })
             }
             composable(Screen.Starred.route) {
                 StarredScreen(

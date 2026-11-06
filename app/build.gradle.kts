@@ -27,10 +27,18 @@ android {
         applicationId = "com.awd.teledrive"
         minSdk = 24
         targetSdk = 35
-        versionCode = 7
-        versionName = "1.4.1"
+        versionCode = 8
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // OAuth redirect scheme for Google Sign-In. Keep in sync with Config.googleRedirectScheme.
+        val googleClientId = (project.findProperty("GOOGLE_CLIENT_ID") as String?)
+            ?: System.getenv("GOOGLE_CLIENT_ID") ?: ""
+        manifestPlaceholders["appAuthRedirectScheme"] =
+            if (googleClientId.isNotBlank() && googleClientId.contains(".apps.googleusercontent.com"))
+                "com.googleusercontent.apps." + googleClientId.substringBefore(".apps.googleusercontent.com")
+            else "com.awd.teledrive.oauth"
 
         // Hanya sertakan arsitektur yang umum digunakan untuk mengurangi ukuran APK
         ndk {

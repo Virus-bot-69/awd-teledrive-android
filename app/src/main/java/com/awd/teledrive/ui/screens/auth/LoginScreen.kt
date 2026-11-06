@@ -72,6 +72,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.awd.teledrive.R
+import com.awd.teledrive.core.Config
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,8 +112,11 @@ fun LoginContent(
     onPasswordSubmit: (String) -> Unit,
     onResetApi: () -> Unit
 ) {
-    var apiId by remember { mutableStateOf("") }
-    var apiHash by remember { mutableStateOf("") }
+    // If the developer hardcoded credentials in core/Config.kt, prefill them and
+    // hide the input fields behind an "Advanced" toggle (only phone + OTP shown).
+    var apiId by remember { mutableStateOf(if (Config.isApiConfigured) Config.API_ID.toString() else "") }
+    var apiHash by remember { mutableStateOf(if (Config.isApiConfigured) Config.API_HASH else "") }
+    var showApiAdvanced by remember { mutableStateOf(!Config.isApiConfigured) }
     var phoneNumber by remember { mutableStateOf("") }
     var code by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -222,6 +226,21 @@ fun LoginContent(
 
                 when (uiState) {
                     is LoginUiState.InitialSetup -> {
+                        if (Config.isApiConfigured) {
+                            // Default credentials are compiled in: keep the fields collapsed.
+                            TextButton(
+                                onClick = { showApiAdvanced = !showApiAdvanced },
+                                modifier = Modifier.padding(bottom = 2.dp)
+                            ) {
+                                Icon(Icons.Default.VpnKey, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(Modifier.width(6.dp))
+                                Text(
+                                    text = if (showApiAdvanced) "Hide API credentials" else "Advanced: API credentials",
+                                    fontSize = 12.sp
+                                )
+                            }
+                        }
+                        AnimatedVisibility(visible = showApiAdvanced) {
                         Card(
                             shape = MaterialTheme.shapes.large,
                             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
@@ -276,8 +295,9 @@ fun LoginContent(
                             }
                         }
                         
+                        }
                         Spacer(modifier = Modifier.height(24.dp))
-                        
+
                         OutlinedTextField(
                             value = phoneNumber,
                             onValueChange = { phoneNumber = it },

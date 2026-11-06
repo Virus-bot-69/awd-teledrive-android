@@ -34,6 +34,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.awd.teledrive.core.Config
+import com.awd.teledrive.data.google.GoogleOAuth
 import com.awd.teledrive.data.repository.UpdateRepository
 import com.awd.teledrive.data.repository.UpdateState
 import com.awd.teledrive.data.secure.SecureSettings
@@ -58,6 +60,9 @@ class MainActivity : AppCompatActivity() {
     
     @Inject
     lateinit var updateRepository: UpdateRepository
+
+    @Inject
+    lateinit var googleOAuth: GoogleOAuth
     
     private val securityViewModel: SecurityViewModel by viewModels()
     private var lastPauseTime: Long = 0
@@ -87,8 +92,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /** Handles the OAuth redirect (scheme from Config.googleRedirectScheme) coming back from the browser. */
+    private fun handleOAuthRedirect(intent: Intent?) {
+        val data = intent?.data ?: return
+        if (data.scheme != Config.googleRedirectScheme) return
+        lifecycleScope.launch {
+            val ok = googleOAuth.exchangeCode(data)
+            android.widget.Toast.makeText(
+                this@MainActivity,
+                if (ok) getString(R.string.google_signed_in) else getString(R.string.google_sign_in_failed),
+                android.widget.Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleOAuthRedirect(intent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handleOAuthRedirect(intent)
         checkAndRequestPermissions()
         
         // Trigger update check once

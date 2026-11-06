@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Awd TeleDrive</string>
+    <string name="app_name">My Personal Drive</string>
     <string name="welcome_title">Selamat Datang di Awd TeleDrive</string>
     <string name="auto_backup">Cadangan Otomatis</string>
     <string name="backup_settings">Pengaturan Cadangan</string>
@@ -22,6 +22,7 @@
     <string name="settings">Pengaturan</string>
     <string name="transfers">Transfer</string>
     <string name="media">Media</string>
+    <string name="multi_drive">Multi Drive</string>
     <string name="home">Beranda</string>
     <string name="starred">Berbintang</string>
     <string name="logout">Keluar dari Telegram</string>
@@ -335,4 +336,6 @@
     <string name="encrypting_perc">Mengenkripsi... %d%%</string>
     <string name="decrypting_perc">Mendekripsi... %d%%</string>
     <string name="status_waiting">Menunggu...</string>
+    <string name="google_signed_in">Google account connected</string>
+    <string name="google_sign_in_failed">Google sign-in failed</string>
 </resources>
