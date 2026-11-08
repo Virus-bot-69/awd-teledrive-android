@@ -9,10 +9,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-        - name: Apply uploaded v2.0.1 source update
-     run: |
-       unzip -oq my-personal-drive-update-v2.0.1.zip -d .
-       grep -n 'versionName = "2.0.1"' app/build.gradle.kts
+      - uses: actions/checkout@v4
+
+      - name: Apply uploaded v2.0.1 source update
+        run: |
+          unzip -oq my-personal-drive-update-v2.0.1.zip -d .
+          grep -n 'versionName = "2.0.1"' app/build.gradle.kts
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -36,7 +38,6 @@ jobs:
         run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: my-personal-drive-apk
