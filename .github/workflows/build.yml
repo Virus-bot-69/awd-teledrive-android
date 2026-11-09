@@ -1,21 +1,22 @@
-name: Build APK
+name: Build My Personal Drive APK
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Apply uploaded v2.0.3 source update
+      - name: Apply v2.0.5 source update
         run: |
-          test -s my-personal-drive-update-v2.0.3.zip
-          unzip -oq my-personal-drive-update-v2.0.3.zip -d .
-          grep -n 'versionName = "2.0.3"' app/build.gradle.kts
+          test -s my-personal-drive-update-v2.0.5.zip
+          unzip -oq my-personal-drive-update-v2.0.5.zip -d .
+          grep -n 'versionName = "2.0.5"' app/build.gradle.kts
+          grep -n 'versionCode = 13' app/build.gradle.kts
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -32,15 +33,15 @@ jobs:
           "$SDKMAN" --install "platform-tools" "platforms;android-36" "build-tools;36.0.0"
           ls "$ANDROID_HOME/platforms" || true
 
-      - name: Make gradlew executable
+      - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
       - name: Build debug APK
         run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: my-personal-drive-apk
+          name: my-personal-drive-v2.0.5-apk
           path: app/build/outputs/apk/debug/*.apk
-          if-no-files-found: warn
+          if-no-files-found: error
