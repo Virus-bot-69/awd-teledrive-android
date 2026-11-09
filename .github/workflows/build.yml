@@ -11,11 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Apply uploaded v2.0.2 source update
+      - name: Apply uploaded v2.0.3 source update
         run: |
-          test -s my-personal-drive-update-v2.0.2.zip
-          unzip -oq my-personal-drive-update-v2.0.2.zip -d .
-          grep -n 'versionName = "2.0.2"' app/build.gradle.kts
+          test -s my-personal-drive-update-v2.0.3.zip
+          unzip -oq my-personal-drive-update-v2.0.3.zip -d .
+          grep -n 'versionName = "2.0.3"' app/build.gradle.kts
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
